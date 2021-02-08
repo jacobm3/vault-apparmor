@@ -1,0 +1,38 @@
+# Last Modified: Thu Jan 14 06:41:46 2021
+#include <tunables/global>
+
+# aa-easyprof /usr/bin/vault
+# vim:syntax=apparmor
+# AppArmor policy for vault agent
+# Author - jmartinson@hashicorp.com
+# No template variables specified
+
+
+/usr/bin/vault {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Vault agent configs, approle IDs
+  /etc/vault.d/* r,
+
+  /proc/version r,
+  /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+  /usr/bin/getconf Cx,
+  /usr/bin/getconf r,
+  /usr/bin/vault r,
+
+  # Vault agent will try to read ~/.vault-token and fail if the file exists
+  # and permission is denied.
+  owner /home/ubuntu/.vault-token r,
+
+  # Token sink directory
+  # Include any template output paths here
+  owner /var/lib/vault-agent/* rw,
+
+  profile /usr/bin/getconf flags=(complain) {
+    #include <abstractions/base>
+
+    /usr/bin/getconf mr,
+
+  }
+}
