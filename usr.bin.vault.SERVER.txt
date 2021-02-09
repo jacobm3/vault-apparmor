@@ -1,0 +1,33 @@
+# Last Modified: Mon Feb  8 23:56:07 2021
+#include <tunables/global>
+
+# aa-easyprof /usr/bin/vault
+# vim:syntax=apparmor
+# AppArmor policy for vault server
+# Author - jmartinson@hashicorp.com
+# No template variables specified
+
+
+/usr/bin/vault flags=(complain) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  /etc/vault.d/* r,
+  /proc/sys/net/core/somaxconn r,
+  /proc/version r,
+  /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+  /usr/bin/getconf Cx,
+  /usr/bin/getconf r,
+  /usr/bin/vault r,
+  owner /home/*/.vault-token rw,
+  owner /home/*/.vault-token.tmp rw,
+  owner /opt/vault/data/* rw,
+  owner /opt/vault/tls/* r,
+
+  profile /usr/bin/getconf flags=(complain) {
+    #include <abstractions/base>
+
+    /usr/bin/getconf mr,
+
+  }
+}
