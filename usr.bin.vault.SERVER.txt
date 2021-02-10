@@ -1,30 +1,33 @@
-# Last Modified: Mon Feb  8 23:56:07 2021
+# Last Modified: Wed Feb 10 20:59:06 2021
 #include <tunables/global>
 
-# aa-easyprof /usr/bin/vault
 # vim:syntax=apparmor
 # AppArmor policy for vault server
 # Author - jmartinson@hashicorp.com
 # No template variables specified
 
 
-/usr/bin/vault flags=(complain) {
+/usr/bin/vault flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/nameservice>
+  #include <abstractions/user-tmp>
 
-  /etc/vault.d/* r,
+  /etc/vault.d/** r,
+  /etc/vault.d/plugins/* mrix,
   /proc/sys/net/core/somaxconn r,
   /proc/version r,
   /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
   /usr/bin/getconf Cx,
   /usr/bin/getconf r,
   /usr/bin/vault r,
+  /opt/vault/data/** rw,
+  /opt/vault/tls/** r,
   owner /home/*/.vault-token rw,
   owner /home/*/.vault-token.tmp rw,
-  owner /opt/vault/data/* rw,
-  owner /opt/vault/tls/* r,
+  owner /root/.vault-token rw,
+  owner /root/.vault-token.tmp rw,
 
-  profile /usr/bin/getconf flags=(complain) {
+  profile /usr/bin/getconf {
     #include <abstractions/base>
 
     /usr/bin/getconf mr,
