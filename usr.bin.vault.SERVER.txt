@@ -12,16 +12,27 @@
   #include <abstractions/nameservice>
   #include <abstractions/user-tmp>
 
+  # Config directory
   /etc/vault.d/** r,
+  
+  # Plugin directory
   /etc/vault.d/plugins/* mrix,
+  
+  # Startup checks
   /proc/sys/net/core/somaxconn r,
   /proc/version r,
   /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
   /usr/bin/getconf Cx,
   /usr/bin/getconf r,
   /usr/bin/vault r,
+  
+  # Data directory
   /opt/vault/data/** rw,
+  
+  # Listener TLS certificates
   /opt/vault/tls/** r,
+  
+  # Vault tokens in home directories
   owner /home/*/.vault-token rw,
   owner /home/*/.vault-token.tmp rw,
   owner /root/.vault-token rw,
