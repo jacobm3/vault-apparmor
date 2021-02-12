@@ -18,6 +18,10 @@
   # Plugin directory
   /etc/vault.d/plugins/* mrix,
   
+  # Audit logs, commonly used paths
+  /var/log/vault/* rw,
+  /var/log/vault_audit* rw,
+  
   # Startup checks
   /proc/sys/net/core/somaxconn r,
   /proc/version r,
